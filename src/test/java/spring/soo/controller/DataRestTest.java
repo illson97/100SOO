@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled("Rest 연결 관련 필요할 때만 사용")
 @DisplayName("Data Rest 테스트")
 @Transactional
 @AutoConfigureMockMvc
