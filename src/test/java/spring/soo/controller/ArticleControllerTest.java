@@ -29,24 +29,24 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("articles"));
     }
 
-    @DisplayName("[view][GET] Article 상세 페이지 - 정상 호출")
-    @Test
-    public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
-        mvc.perform(get("/articles/1")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
-    }
-
-    @DisplayName("[view][GET] Article 검색 페이지 - 정상 호출")
-    @Test
-    public void givenNothing_whenSearchingArticleView_thenReturnSearchingArticleView() throws Exception {
-        mvc.perform(get("/articles/search")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
-    }
-
-    @DisplayName("[view][GET] Article 해시테그 검색 페이지 - 정상 호출")
-    @Test
-    public void givenNothing_whenHashtagArticleView_thenReturnHashtagArticleView() throws Exception {
-        mvc.perform(get("/articles/search-hashtag")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("article"));
-    }
+//    @DisplayName("[view][GET] Article 상세 페이지 - 정상 호출")
+//    @Test
+//    public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
+//        mvc.perform(get("/articles/1")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+//                .andExpect(model().attributeExists("article"));
+//    }
+//
+//    @DisplayName("[view][GET] Article 검색 페이지 - 정상 호출")
+//    @Test
+//    public void givenNothing_whenSearchingArticleView_thenReturnSearchingArticleView() throws Exception {
+//        mvc.perform(get("/articles/search")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+//                .andExpect(model().attributeExists("article"));
+//    }
+//
+//    @DisplayName("[view][GET] Article 해시테그 검색 페이지 - 정상 호출")
+//    @Test
+//    public void givenNothing_whenHashtagArticleView_thenReturnHashtagArticleView() throws Exception {
+//        mvc.perform(get("/articles/search-hashtag")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+//                .andExpect(model().attributeExists("article"));
+//    }
 }

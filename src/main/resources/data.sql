@@ -98,3 +98,8 @@ insert into article (title, content, hashtag, created_by, modified_by, created_a
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Integer tincidunt ante vel ipsum.', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', 'Pink', 'Blair', 'Russell', '2023-05-13 10:01:37', '2023-05-01 07:25:48');
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Vivamus vel nulla eget eros elementum pellentesque.', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', 'Violet', 'Odessa', 'Sly', '2023-07-13 15:05:50', '2022-12-08 10:28:27');
 insert into article (title, content, hashtag, created_by, modified_by, created_at, modified_at) values ('Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', null, 'Darryl', 'Arin', '2023-07-28 16:24:42', '2023-03-02 09:36:25');
+
+
+# insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
+#     ('uno', 'asdf1234', 'Uno', 'uno@mail.com', 'I am Uno.', now(), 'uno', now(), 'uno')
+# ;

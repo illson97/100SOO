@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<thlogic>
+    <attr sel="footer" th:replace="footer :: footer"/>
+</thlogic>
