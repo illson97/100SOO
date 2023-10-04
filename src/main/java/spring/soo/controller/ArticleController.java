@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import static spring.soo.domain.QArticle.article;
+
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
@@ -20,7 +22,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String article(@PathVariable Long articleId, ModelMap map) {
-        map.addAttribute("article", null);
+        map.addAttribute("article", "article");
         map.addAttribute("articleComments", List.of());
 
         return "articles/detail";
