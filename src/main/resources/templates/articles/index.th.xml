@@ -15,17 +15,16 @@
 <!--        </attr>-->
 <!--        <attr sel="#search-value" th:value="${param.searchValue}" />-->
 
-<!--        <attr sel="#article-table">-->
+        <attr sel="#article-table">
 <!--            <attr sel="thead/tr">-->
-<!--                <attr sel="th.title/a" th:text="'제목'" th:href="@{/articles(-->
-<!--            page=${articles.number},-->
+<!--                <attr sel="th.title/a" th:text="'제목'" th:href="@{/articles(page=${articles.number},-->
 <!--            sort='title' + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''),-->
 <!--            searchType=${param.searchType},-->
 <!--            searchValue=${param.searchValue}-->
 <!--        )}"/>-->
 <!--                <attr sel="th.hashtag/a" th:text="'해시태그'" th:href="@{/articles(-->
 <!--            page=${articles.number},-->
-<!--            sort='hashtags' + (*{sort.getOrderFor('hashtags')} != null ? (*{sort.getOrderFor('hashtags').direction.name} != 'DESC' ? ',desc' : '') : ''),-->
+<!--            sort='hashtag' + (*{sort.getOrderFor('hashtag')} != null ? (*{sort.getOrderFor('hashtag').direction.name} != 'DESC' ? ',desc' : '') : ''),-->
 <!--            searchType=${param.searchType},-->
 <!--            searchValue=${param.searchValue}-->
 <!--        )}"/>-->
@@ -43,20 +42,17 @@
 <!--        )}"/>-->
 <!--            </attr>-->
 
-<!--            <attr sel="tbody" th:remove="all-but-first">-->
-<!--                <attr sel="tr[0]" th:each="article : ${articles}">-->
-<!--                    <attr sel="td.title/a" th:text="${article.title}" th:href="@{'/articles/' + ${article.id}}" />-->
-<!--                    <attr sel="td.hashtag/span" th:each="hashtag : ${article.hashtags}">-->
-<!--                        <attr sel="a"-->
-<!--                              th:text="'#' + ${hashtag}"-->
-<!--                              th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}"-->
-<!--                        />-->
-<!--                    </attr>-->
-<!--                    <attr sel="td.user-id" th:text="${article.nickname}" />-->
-<!--                    <attr sel="td.created-at/time" th:datetime="${article.createdAt}" th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}" />-->
-<!--                </attr>-->
-<!--            </attr>-->
-<!--        </attr>-->
+            <attr sel="tbody" th:remove="all-but-first">
+                <attr sel="tr[0]" th:each="article : ${articles}">
+                    <attr sel="td.title/a" th:text="${article.title}" th:href="@{'/articles/' + ${article.id}}" />
+                    <attr sel="td.hashtag/span" th:each="hashtag : ${article.hashtag}">
+                        <attr sel="a" th:text="'#' + ${hashtag}" th:href="@{/articles(searchType=${searchTypeHashtag},searchValue=${hashtag})}"/>
+                    </attr>
+                    <attr sel="td.user-id" th:text="${article.nickname}" />
+                    <attr sel="td.created-at/time" th:datetime="${article.createdAt}" th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}" />
+                </attr>
+            </attr>
+        </attr>
 
 <!--        <attr sel="#write-article" sec:authorize="isAuthenticated()" th:href="@{/articles/form}" />-->
 
