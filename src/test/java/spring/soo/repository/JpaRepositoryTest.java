@@ -8,21 +8,22 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import spring.soo.config.JpaConfig;
 import spring.soo.domain.Article;
+import spring.soo.domain.UserAccount;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("JPA 연결 테스트")
 @Import(JpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {
-    private ArticleRepository articleRepository;
-    private ArticleCommentRepository articleCommentRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    public JpaRepositoryTest(@Autowired ArticleRepository articleRepository, @Autowired ArticleCommentRepository articleCommentRepository) {
+    public JpaRepositoryTest(@Autowired ArticleRepository articleRepository, @Autowired ArticleCommentRepository articleCommentRepository, @Autowired UserAccountRepository userAccountRepository) {
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select 테스트")
@@ -30,7 +31,7 @@ class JpaRepositoryTest {
     void givenTestData_whenSelecting_thenWorksFine() {
         List<Article> articles = articleRepository.findAll();
 
-        Assertions.assertThat(articles).isNotNull().hasSize(100);
+        Assertions.assertThat(articles).isNotNull().hasSize(123);
     }
 
     @DisplayName("insert 테스트")
@@ -38,8 +39,10 @@ class JpaRepositoryTest {
     void givenTestData_whenInserting_thenWorksFine() {
 
         long previousCount = articleRepository.count();
-        Article savedArticle = articleRepository.save(Article.of("new article", "new content", "#spring"));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("uno", "pw", null, null, null));
+        Article article = Article.of(userAccount, "new article", "new content", "hashtag");
 
+        articleRepository.save(article);
 
         Assertions.assertThat(articleRepository.count()).isEqualTo(previousCount + 1);
     }

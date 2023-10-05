@@ -11,8 +11,13 @@ import spring.soo.domain.ArticleComment;
 import spring.soo.domain.QArticle;
 import spring.soo.domain.QArticleComment;
 
+import java.util.List;
+
 @RepositoryRestResource
-public interface ArticleCommentRepository extends JpaRepository<ArticleComment, Long>, QuerydslPredicateExecutor<ArticleComment>, QuerydslBinderCustomizer<QArticleComment> {
+public interface ArticleCommentRepository extends JpaRepository<ArticleComment, Long>,
+        QuerydslPredicateExecutor<ArticleComment>,
+        QuerydslBinderCustomizer<QArticleComment> {
+    List<ArticleComment> findByArticle_Id(Long articleId);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticleComment root) {
