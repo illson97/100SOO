@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import spring.soo.config.SecurityConfig;
+import spring.soo.domain.type.SearchType;
 import spring.soo.dto.ArticleWithCommentsDto;
 import spring.soo.dto.UserAccountDto;
 import spring.soo.service.ArticleService;
@@ -111,9 +112,24 @@ class ArticleControllerTest {
     @DisplayName("[view][GET] Article 검색 페이지 - 정상 호출")
     @Test
     public void givenNothing_whenSearchingArticleView_thenReturnSearchingArticleView() throws Exception {
-        mvc.perform(get("/articles/search")).andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attributeExists("articles/search"));
 
+        SearchType searchType = SearchType.TITLE;
+        String searchValue = "title";
+        given(articleService.searchArticles(eq(searchType),eq(searchValue),any(Pageable.class))).willReturn(Page.empty());
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
+
+        mvc.perform(
+                get("/articles")
+                        .queryParam("searchType", searchType.name())
+                        .queryParam("searchValue", searchValue)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"))
+                .andExpect(model().attributeExists("searchTypes"));
+        then(articleService).should().searchArticles(eq(searchType),eq(searchValue),any(Pageable.class));
+        then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
     @DisplayName("[view][GET] Article 해시테그 검색 페이지 - 정상 호출")
