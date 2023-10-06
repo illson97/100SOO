@@ -14,18 +14,15 @@ import java.util.Objects;
 @Getter
 @ToString
 @Table(indexes = {
-        @Index(columnList = "userId"),
         @Index(columnList = "email", unique = true),
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
 @Entity
 public class UserAccount extends AuditingFields {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Setter
+
+    @Id
     @Column(nullable = false, length = 50)
     private String userId;
 
@@ -65,12 +62,12 @@ public class UserAccount extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserAccount userAccount)) return false;
-        return id != null && id.equals(userAccount.id);
+        return userId != null && userId.equals(userAccount.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(userId);
     }
 
 }

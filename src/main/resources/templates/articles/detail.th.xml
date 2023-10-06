@@ -17,11 +17,13 @@
     </attr>
 
 
-<!--        <attr sel="#article-buttons" th:if="${#authorization.expression('isAuthenticated()')} and *{userId} == ${#authentication.name}">-->
-<!--            <attr sel="#delete-article-form" th:action="'/articles/' + *{id} + '/delete'" th:method="post">-->
-<!--                <attr sel="#update-article" th:href="'/articles/' + *{id} + '/form'" />-->
-<!--            </attr>-->
-<!--        </attr>-->
+        <attr sel="#article-buttons" >
+<!--              th:if="${#authorization.expression('isAuthenticated()')} and *{userId} == ${#authentication.name}"-->
+        >
+            <attr sel="#delete-article-form" th:action="'/articles/' + *{id} + '/delete'" th:method="post">
+                <attr sel="#update-article" th:href="'/articles/' + *{id} + '/form'" />
+            </attr>
+        </attr>
 
 <!--        <attr sel=".article-id" th:name="articleId" th:value="*{id}" />-->
 <!--        <attr sel=".comment-form" th:action="@{/comments/new}" th:method="post">-->
@@ -50,17 +52,17 @@
 <!--            <attr sel=".parent-comment-id" th:name="parentCommentId" th:value="${articleComment.id}" />-->
 <!--        </attr>-->
 
-<!--        <attr sel="#pagination">-->
-<!--            <attr sel="ul">-->
-<!--                <attr sel="li[0]/a"-->
-<!--                      th:href="*{id} - 1 <= 0 ? '#' : |/articles/*{id - 1}|"-->
-<!--                      th:class="'page-link' + (*{id} - 1 <= 0 ? ' disabled' : '')"-->
-<!--                />-->
-<!--                <attr sel="li[1]/a"-->
-<!--                      th:href="*{id} + 1 > ${totalCount} ? '#' : |/articles/*{id + 1}|"-->
-<!--                      th:class="'page-link' + (*{id} + 1 > ${totalCount} ? ' disabled' : '')"-->
-<!--                />-->
-<!--            </attr>-->
-<!--        </attr>-->
+        <attr sel="#pagination">
+            <attr sel="ul">
+                <attr sel="li[0]/a"
+                      th:href="*{id} - 1 <= 0 ? '#' : |/articles/*{id - 1}|"
+                      th:class="'page-link' + (*{id} - 1 <= 0 ? ' disabled' : '')"
+                />
+                <attr sel="li[1]/a"
+                      th:href="*{id} + 1 > ${totalCount} ? '#' : |/articles/*{id + 1}|"
+                      th:class="'page-link' + (*{id} + 1 > ${totalCount} ? ' disabled' : '')"
+                />
+            </attr>
+        </attr>
 <!--    </attr>-->
 </thlogic>

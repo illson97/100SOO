@@ -1,6 +1,7 @@
-package spring.soo.domain.type;
+package spring.soo.domain.constant;
 
 import lombok.Getter;
+
 
 public enum SearchType {
     TITLE("제목"),

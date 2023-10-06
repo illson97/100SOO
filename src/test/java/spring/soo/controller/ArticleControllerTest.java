@@ -1,6 +1,5 @@
 package spring.soo.controller;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,27 +13,34 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import spring.soo.config.SecurityConfig;
-import spring.soo.domain.type.SearchType;
+import spring.soo.domain.constant.FormStatus;
+import spring.soo.domain.constant.SearchType;
+import spring.soo.dto.ArticleDto;
 import spring.soo.dto.ArticleWithCommentsDto;
 import spring.soo.dto.UserAccountDto;
+import spring.soo.dto.request.ArticleRequest;
+import spring.soo.dto.response.ArticleResponse;
 import spring.soo.service.ArticleService;
 import spring.soo.service.PaginationService;
-
+import spring.soo.util.FormDataEncoder;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("view 컨트롤러 - Article")
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, FormDataEncoder.class})
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
     private final MockMvc mvc;
+    private final FormDataEncoder formDataEncoder;
 
     @MockBean
     private ArticleService articleService;
@@ -42,8 +48,13 @@ class ArticleControllerTest {
     @MockBean
     private PaginationService paginationService;
 
-    public ArticleControllerTest(@Autowired MockMvc mvc) {
+    public ArticleControllerTest(
+            @Autowired MockMvc mvc,
+            @Autowired FormDataEncoder formDataEncoder
+
+    ) {
         this.mvc = mvc;
+        this.formDataEncoder = formDataEncoder;
     }
 
     @DisplayName("[view][GET] Article 리스트 페이지 - 정상 호출")
@@ -68,7 +79,7 @@ class ArticleControllerTest {
     public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
 
         Long articleId = 1L;
-        given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+        given(articleService.getArticleWithComments(articleId)).willReturn(createArticleWithCommentsDto());
 
         mvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
@@ -76,8 +87,7 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"));
-        then(articleService).should()
-                .getArticle(articleId);
+        then(articleService).should().getArticleWithComments(articleId);
     }
 
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 페이징, 정렬 기능")
@@ -207,6 +217,107 @@ class ArticleControllerTest {
         then(articleService).should().getHashtags();
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
+
+    @DisplayName("[view][GET] 새 게시글 작성 페이지")
+    @Test
+    void givenNothing_whenRequesting_thenReturnsNewArticlePage() throws Exception {
+        // Given
+
+        // When & Then
+        mvc.perform(get("/articles/form"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/form"))
+                .andExpect(model().attribute("formStatus", FormStatus.CREATE));
+    }
+
+    @DisplayName("[view][POST] 새 게시글 등록 - 정상 호출")
+    @Test
+    void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
+        // Given
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
+
+        // When & Then
+        mvc.perform(
+                        post("/articles/form")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .content(formDataEncoder.encode(articleRequest))
+                                .with(csrf())
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/articles"))
+                .andExpect(redirectedUrl("/articles"));
+        then(articleService).should().saveArticle(any(ArticleDto.class));
+    }
+
+    @DisplayName("[view][GET] 게시글 수정 페이지")
+    @Test
+    void givenNothing_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
+        // Given
+        long articleId = 1L;
+        ArticleDto dto = createArticleDto();
+        given(articleService.getArticle(articleId)).willReturn(dto);
+
+        // When & Then
+        mvc.perform(get("/articles/" + articleId + "/form"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/form"))
+                .andExpect(model().attribute("article", ArticleResponse.from(dto)))
+                .andExpect(model().attribute("formStatus", FormStatus.UPDATE));
+        then(articleService).should().getArticle(articleId);
+    }
+
+    @DisplayName("[view][POST] 게시글 수정 - 정상 호출")
+    @Test
+    void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
+        // Given
+        long articleId = 1L;
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
+
+        // When & Then
+        mvc.perform(
+                        post("/articles/" + articleId + "/form")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .content(formDataEncoder.encode(articleRequest))
+                                .with(csrf())
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/articles/" + articleId))
+                .andExpect(redirectedUrl("/articles/" + articleId));
+        then(articleService).should().updateArticle(eq(articleId), any(ArticleDto.class));
+    }
+
+    @DisplayName("[view][POST] 게시글 삭제 - 정상 호출")
+    @Test
+    void givenArticleIdToDelete_whenRequesting_thenDeletesArticle() throws Exception {
+        // Given
+        long articleId = 1L;
+        willDoNothing().given(articleService).deleteArticle(articleId);
+
+        // When & Then
+        mvc.perform(
+                        post("/articles/" + articleId + "/delete")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .with(csrf())
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/articles"))
+                .andExpect(redirectedUrl("/articles"));
+        then(articleService).should().deleteArticle(articleId);
+    }
+
+
+    private ArticleDto createArticleDto() {
+        return ArticleDto.of(
+                createUserAccountDto(),
+                "title",
+                "content",
+                "#java"
+        );
+    }
     private ArticleWithCommentsDto createArticleWithCommentsDto() {
         return ArticleWithCommentsDto.of(
                 1L,
@@ -224,16 +335,15 @@ class ArticleControllerTest {
 
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
-                1L,
-                "illson",
+                "uno",
                 "pw",
-                "illson97@github.com",
-                "illson",
+                "uno@mail.com",
+                "Uno",
                 "memo",
                 LocalDateTime.now(),
-                "illson",
+                "uno",
                 LocalDateTime.now(),
-                "illson"
+                "uno"
         );
     }
 }
