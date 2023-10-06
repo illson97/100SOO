@@ -11,9 +11,15 @@ import spring.soo.domain.Article;
 import spring.soo.domain.QArticle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import spring.soo.repository.querydsl.ArticleRepositoryCustom;
 
 @RepositoryRestResource
-public interface ArticleRepository extends JpaRepository<Article, Long>, QuerydslPredicateExecutor<Article>, QuerydslBinderCustomizer<QArticle> {
+public interface ArticleRepository extends
+        JpaRepository<Article, Long>,
+        ArticleRepositoryCustom,
+        QuerydslPredicateExecutor<Article>,
+        QuerydslBinderCustomizer<QArticle>
+{
 
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
