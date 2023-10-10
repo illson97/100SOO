@@ -9,10 +9,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/board
-    username: illson
+    url: jdbc:postgresql://localhost:5432/board
+    username: postgres
     password: Wjddlf12!!
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     defer-datasource-initialization: true

@@ -19,7 +19,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class PaginationServiceTest {
     private final PaginationService sut;
 
-    public PaginationServiceTest(@Autowired PaginationService paginationService) {
+    PaginationServiceTest(@Autowired PaginationService paginationService) {
         this.sut = paginationService;
     }
 

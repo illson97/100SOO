@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import spring.soo.domain.Article;
 import spring.soo.domain.ArticleComment;
+import spring.soo.domain.Hashtag;
 import spring.soo.domain.UserAccount;
 import spring.soo.dto.ArticleCommentDto;
 import spring.soo.dto.UserAccountDto;
@@ -19,6 +20,7 @@ import spring.soo.repository.UserAccountRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -165,7 +167,7 @@ class ArticleCommentServiceTest {
 
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
-                Article.of(createUserAccount(), "title", "content", "hashtag"),
+                createArticle(),
                 createUserAccount(),
                 content
         );
@@ -182,11 +184,16 @@ class ArticleCommentServiceTest {
     }
 
     private Article createArticle() {
-        return Article.of(
+        Article article = Article.of(
                 createUserAccount(),
                 "title",
-                "content",
-                "#java"
+                "content"
         );
+        article.addHashtags(Set.of(createHashtag(article)));
+
+        return article;
+    }
+    private Hashtag createHashtag(Article article) {
+        return Hashtag.of("java");
     }
 }

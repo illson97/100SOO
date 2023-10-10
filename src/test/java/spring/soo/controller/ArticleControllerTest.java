@@ -52,7 +52,7 @@ class ArticleControllerTest {
     @MockBean
     private PaginationService paginationService;
 
-    public ArticleControllerTest(
+    ArticleControllerTest(
             @Autowired MockMvc mvc,
             @Autowired FormDataEncoder formDataEncoder
 
@@ -63,7 +63,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view][GET] Article 리스트 페이지 - 정상 호출")
     @Test
-    public void givenNothing_whenRequestingArticlesView_thenReturnArticlesView() throws Exception {
+    void givenNothing_whenRequestingArticlesView_thenReturnArticlesView() throws Exception {
 
         given(articleService.searchArticles(eq(null),eq(null),any(Pageable.class))).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
@@ -81,7 +81,7 @@ class ArticleControllerTest {
     @WithMockUser
     @DisplayName("[view][GET] 게시글 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
+    void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
 
         Long articleId = 1L;
         given(articleService.getArticleWithComments(articleId)).willReturn(createArticleWithCommentsDto());
@@ -110,10 +110,10 @@ class ArticleControllerTest {
 
         // When & Then
         mvc.perform(
-                        get("/articles")
-                                .queryParam("page", String.valueOf(pageNumber))
-                                .queryParam("size", String.valueOf(pageSize))
-                                .queryParam("sort", sortName + "," + direction)
+                get("/articles")
+                        .queryParam("page", String.valueOf(pageNumber))
+                        .queryParam("size", String.valueOf(pageSize))
+                        .queryParam("sort", sortName + "," + direction)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
@@ -140,7 +140,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view][GET] Article 검색 페이지 - 정상 호출")
     @Test
-    public void givenNothing_whenSearchingArticleView_thenReturnSearchingArticleView() throws Exception {
+    void givenNothing_whenSearchingArticleView_thenReturnSearchingArticleView() throws Exception {
 
         SearchType searchType = SearchType.TITLE;
         String searchValue = "title";
@@ -164,7 +164,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view][GET] Article 해시테그 검색 페이지 - 정상 호출")
     @Test
-    public void givenNothing_whenRequestingArticleSearchHashtagView_thenReturnArticleSearchHashtagView() throws Exception {
+    void givenNothing_whenRequestingArticleSearchHashtagView_thenReturnArticleSearchHashtagView() throws Exception {
 
         List<String> hashtags = List.of("#java", "#spring", "#boot");
 
@@ -189,7 +189,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출")
     @Test
-    public void givenNothing_whenRequestingArticleSearchHashtagView_thenReturnsArticleSearchHashtagView() throws Exception {
+    void givenNothing_whenRequestingArticleSearchHashtagView_thenReturnsArticleSearchHashtagView() throws Exception {
         // Given
         List<String> hashtags = List.of("#java", "#spring", "#boot");
         given(articleService.searchArticlesViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
@@ -212,7 +212,7 @@ class ArticleControllerTest {
 
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출, 해시태그 입력")
     @Test
-    public void givenHashtag_whenRequestingArticleSearchHashtagView_thenReturnsArticleSearchHashtagView() throws Exception {
+    void givenHashtag_whenRequestingArticleSearchHashtagView_thenReturnsArticleSearchHashtagView() throws Exception {
         // Given
         String hashtag = "#java";
         List<String> hashtags = List.of("#java", "#spring", "#boot");
