@@ -21,6 +21,7 @@ import spring.soo.domain.constant.FormStatus;
 import spring.soo.domain.constant.SearchType;
 import spring.soo.dto.ArticleDto;
 import spring.soo.dto.ArticleWithCommentsDto;
+import spring.soo.dto.HashtagDto;
 import spring.soo.dto.UserAccountDto;
 import spring.soo.dto.request.ArticleRequest;
 import spring.soo.dto.response.ArticleResponse;
@@ -256,7 +257,7 @@ class ArticleControllerTest {
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
         // Given
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
 
         // When & Then
@@ -309,7 +310,7 @@ class ArticleControllerTest {
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         // Given
         long articleId = 1L;
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
         willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
 
         // When & Then
@@ -352,7 +353,7 @@ class ArticleControllerTest {
                 createUserAccountDto(),
                 "title",
                 "content",
-                "#java"
+                Set.of(HashtagDto.of("java"))
         );
     }
     private ArticleWithCommentsDto createArticleWithCommentsDto() {
@@ -362,7 +363,7 @@ class ArticleControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                "#java",
+                Set.of(HashtagDto.of("java")),
                 LocalDateTime.now(),
                 "illson",
                 LocalDateTime.now(),

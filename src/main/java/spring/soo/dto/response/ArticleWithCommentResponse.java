@@ -1,12 +1,13 @@
 package spring.soo.dto.response;
 
+import spring.soo.dto.ArticleCommentDto;
 import spring.soo.dto.ArticleWithCommentsDto;
 import spring.soo.dto.HashtagDto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public record ArticleWithCommentResponse(
@@ -43,10 +44,31 @@ public record ArticleWithCommentResponse(
                 dto.userAccountDto().email(),
                 nickname,
                 dto.userAccountDto().userId(),
-                dto.articleCommentsDto().stream()
-                        .map(ArticleCommentResponse::from)
-                        .collect(Collectors.toCollection(LinkedHashSet::new))
+                organizeChildComments(dto.articleCommentsDto())
         );
+    }
+
+    private static Set<ArticleCommentResponse> organizeChildComments(Set<ArticleCommentDto> dtos) {
+        Map<Long, ArticleCommentResponse> map = dtos.stream()
+                .map(ArticleCommentResponse::from)
+                .collect(Collectors.toMap(ArticleCommentResponse::id, Function.identity()));
+
+        map.values().stream()
+                .filter(ArticleCommentResponse::hasParentComment)
+                .forEach(comment -> {
+                    ArticleCommentResponse parentComment = map.get(comment.parentCommentId());
+                    parentComment.childComments().add(comment);
+                });
+
+        return map.values().stream()
+                .filter(comment -> !comment.hasParentComment())
+                .collect(Collectors.toCollection(() ->
+                        new TreeSet<>(Comparator
+                                .comparing(ArticleCommentResponse::createdAt)
+                                .reversed()
+                                .thenComparingLong(ArticleCommentResponse::id)
+                        )
+                ));
     }
 
 }

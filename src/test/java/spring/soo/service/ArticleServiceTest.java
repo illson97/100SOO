@@ -312,13 +312,19 @@ class ArticleServiceTest {
         // Given
         Long articleId = 1L;
         String userId = "uno";
+        given(articleRepository.getReferenceById(articleId)).willReturn(createArticle());
         willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
+        willDoNothing().given(articleRepository).flush();
+        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
 
         // When
         sut.deleteArticle(1L, userId);
 
         // Then
+        then(articleRepository).should().getReferenceById(articleId);
         then(articleRepository).should().deleteByIdAndUserAccount_UserId(articleId, userId);
+        then(articleRepository).should().flush();
+        then(hashtagService).should(times(2)).deleteHashtagWithoutArticles(any());
     }
 
     private UserAccount createUserAccount() {
