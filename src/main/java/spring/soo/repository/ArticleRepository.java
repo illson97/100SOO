@@ -11,9 +11,10 @@ import spring.soo.domain.Article;
 import spring.soo.domain.QArticle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import spring.soo.domain.projection.ArticleProjection;
 import spring.soo.repository.querydsl.ArticleRepositoryCustom;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = ArticleProjection.class)
 public interface ArticleRepository extends
         JpaRepository<Article, Long>,
         ArticleRepositoryCustom,

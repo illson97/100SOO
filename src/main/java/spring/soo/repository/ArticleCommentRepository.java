@@ -10,10 +10,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import spring.soo.domain.ArticleComment;
 import spring.soo.domain.QArticle;
 import spring.soo.domain.QArticleComment;
+import spring.soo.domain.projection.ArticleCommentProjection;
 
 import java.util.List;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = ArticleCommentProjection.class)
 public interface ArticleCommentRepository extends JpaRepository<ArticleComment, Long>,
         QuerydslPredicateExecutor<ArticleComment>,
         QuerydslBinderCustomizer<QArticleComment> {

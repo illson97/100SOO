@@ -3,7 +3,6 @@ package spring.soo.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +35,7 @@ public class SecurityConfig {
 
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(mvc.pattern("/api/***")).permitAll()
                         .requestMatchers(mvc.pattern("/")).permitAll()
                         .requestMatchers(mvc.pattern("/articles")).permitAll()
                         .requestMatchers(mvc.pattern("/articles/search-hashtag")).permitAll()
@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 .userService(oAuth2UserService)
                         )
                 )
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .build();
     }
 
